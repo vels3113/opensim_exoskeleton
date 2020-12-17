@@ -56,7 +56,9 @@ void ExoskeletonBody::createBodies()
                        rFootInertia     // Body Inertia
                        );
     rF.scale(Vec3(1.1884260802,1.2782330916,1.3)); // Scale the body
-    rF.addDisplayGeometry("rfoot.obj"); // Add visual geometry to the body
+    OpenSim::Mesh rF_geom("rfoot.obj");
+    rF.attachGeometry(&rF_geom); // Add visual geometry to the body
+    //rF.addDisplayGeometry("rfoot.obj"); // Add visual geometry to the body
     rFoot = rF; // Save the object in a private object body
 
     #ifdef ENABLE_EXOSHIN
@@ -66,7 +68,9 @@ void ExoskeletonBody::createBodies()
                    rShinMassCenter,
                    rShinInertia);
     rS.scale(Vec3(1.1884260802,1.3434147124,1.3));
-    rS.addDisplayGeometry("RightKnee.obj");
+    OpenSim::Mesh rS_geom("RightKnee.obj");
+    rS.attachGeometry(&rS_geom);
+    //rS.addDisplayGeometry("RightKnee.obj");
     rShin = rS;
 
         #ifdef ENABLE_EXOTHIGH
@@ -76,7 +80,9 @@ void ExoskeletonBody::createBodies()
                                rThighMassCenter,
                                rThighInertia);
              rT.scale(Vec3(1.3884260802,1.2178638159,1.3));
-             rT.addDisplayGeometry("RightHip.obj");
+             OpenSim::Mesh rT_geom("RightHip.obj");
+             rT.attachGeometry(&rT_geom);
+             //rT.addDisplayGeometry("RightHip.obj");
              rThigh = rT;
 
             #ifdef ENABLE_EXOHIP
@@ -86,7 +92,9 @@ void ExoskeletonBody::createBodies()
                                     hipMassCenter,
                                     hipInertia);
                 hip.scale(Vec3(1.38842608, 1.391052749, 1.3));
-                hip.addDisplayGeometry("BackExo.obj");
+                OpenSim::Mesh hip_geom("BackExo.obj");
+                hip.attachGeometry(&hip_geom);
+                //hip.addDisplayGeometry("BackExo.obj");
                 exoHip = hip;
 
             #endif // ENABLE_EXOHIP
@@ -298,20 +306,22 @@ void ExoskeletonBody::defineBushingForces(OpenSim::Set<OpenSim::Force>* bushingF
     Vec3 tibiaLoc1(-0.01, -0.45, 0.05);
     Vec3 tibiaOrient(0), ortAnklLoc1(0.04, 0.045, -0.04), ortAnkOrient(0);
     // Contact forces definitions
-    BushingForce tibiaBushingForce1 ("tibia_r",      // Name of body part
-                                     tibiaLoc1,      // Location
-                                     tibiaOrient,    // Orientation
-                                     "rShin",        // Name of exobody part
-                                     ortAnklLoc1,    // Exobody's location
-                                     ortAnkOrient,   // Exobody orientation
-                                     transStiffness, // Translation stiffness
-                                     rotStiffness,   // Rotation stiffness
-                                     transDamping,   // Translation damping
-                                     rotDamping);    // Orientation damping
-    tibiaBushingForce1.setName("tibiaBushingForce1");// Set the name of bushing force
+    BushingForce tibiaBushingForce1 ("tibiaBushingForce1", // force name
+                                     "tibia_r",            // Name of body part
+                                     tibiaLoc1,            // Location
+                                     tibiaOrient,          // Orientation
+                                     "rShin",              // Name of exobody part
+                                     ortAnklLoc1,          // Exobody's location
+                                     ortAnkOrient,         // Exobody orientation
+                                     transStiffness,       // Translation stiffness
+                                     rotStiffness,         // Rotation stiffness
+                                     transDamping,         // Translation damping
+                                     rotDamping);          // Orientation damping
+    //tibiaBushingForce1.setName("tibiaBushingForce1");// Set the name of bushing force
 
     Vec3 tibiaLoc2(-0.01, -0.11, 0.05), ortAnklLoc2(0.041, 0.389, -0.038);
-    BushingForce tibiaBushingForce2 ("tibia_r",
+    BushingForce tibiaBushingForce2 ("tibiaBushingForce2",
+                                      "tibia_r",
                                       tibiaLoc2,
                                       tibiaOrient,
                                       "rShin",
@@ -321,7 +331,7 @@ void ExoskeletonBody::defineBushingForces(OpenSim::Set<OpenSim::Force>* bushingF
                                       rotStiffness,
                                       transDamping,
                                       rotDamping);
-    tibiaBushingForce2.setName("tibiaBushingForce2");
+    //tibiaBushingForce2.setName("tibiaBushingForce2");
 
     bushingForces->insert(bushingForces->getSize(),tibiaBushingForce1); // Save the force to the vector
     bushingForces->insert(bushingForces->getSize(),tibiaBushingForce2);

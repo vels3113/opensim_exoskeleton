@@ -153,18 +153,21 @@ void PositionController::computeControls(const SimTK::State& s, SimTK::Vector &c
    SimTK::Vector grav(computeGravityCompensation(s));
    SimTK::Vector coriolis(computeCoriolisCompensation(s));
 
+   const OpenSim::ScalarActuator& ActuatorExoHip = (OpenSim::ScalarActuator&)(_model->getActuators().get("exoHipActuator_r"));
    double nTorqueExoHip = (dynTorque.get(0) + dynTorque.get(6)
                            + coriolis.get(0) + coriolis.get(6)
                            -(grav.get(0) + grav.get(6))
-                           )/_model->getActuators().get("exoHipActuator_r").getOptimalForce();
+                           ) / ActuatorExoHip.getOptimalForce();
+   const OpenSim::ScalarActuator& ActuatorExoKnee = (OpenSim::ScalarActuator&)(_model->getActuators().get("exoKneeActuator_r"));
    double nTorqueExoKnee = (dynTorque.get(1) + dynTorque.get(2) + dynTorque.get(5)
                             + coriolis.get(1) + coriolis.get(2) + coriolis.get(5)
                             -(grav.get(1) + grav.get(2) + grav.get(3))
-                            )/_model->getActuators().get("exoKneeActuator_r").getOptimalForce();
+                            ) / ActuatorExoKnee.getOptimalForce();
+   const OpenSim::ScalarActuator& ActuatorExoAnkle = (OpenSim::ScalarActuator&)(_model->getActuators().get("exoAnkleActuator_r"));
    double nTorqueExoAnkle = (dynTorque.get(3) + dynTorque.get(4)
                              + coriolis.get(3) + coriolis.get(4)
                             - (grav.get(3) + grav.get(4))
-                             )/_model->getActuators().get("exoAnkleActuator_r").getOptimalForce();
+                             ) / ActuatorExoAnkle.getOptimalForce();
 //   for(int i = 0; i < 3; i++)
 //       cout << "Error " << i+1 << " = " << getErrs[i] << endl;
    vector<string> nameData = {"Error J1", "Error J2", "Error J3",

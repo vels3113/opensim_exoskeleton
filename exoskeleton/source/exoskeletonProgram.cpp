@@ -20,7 +20,13 @@ int main()
     try
     {
         double initTime = 0.0, finalTime = 30.0;
+		vector<string> filePath;
+		vector<string> filePath;
+		filePath.push_back("");
+		string dummy;
+		cin >> dummy;
         Model osimModel("skeleton.osim");
+		//updatePre40KinematicsFilesFor40MotionType(osimModel, filePath, string("_updated"));
         osimModel.setName("exoskeleton");
 
         // Set gravity value
@@ -45,7 +51,7 @@ int main()
 
         const Vec3 locInParent(0), orInParent(0), locInBody(0), orInBody(0);
         WeldJoint* pelvisGround = new WeldJoint("pelvisground",
-                                              osimModel.getGroundBody(),
+                                              osimModel.getGround(),
                                               locInParent,
                                               orInParent,
                                               osimModel.updBodySet().get(1),
@@ -106,10 +112,12 @@ int main()
 
 
         // Simulate
-        RungeKuttaMersonIntegrator integrator (osimModel.updMultibodySystem());
-        Manager manager(osimModel, integrator);
-        manager.setInitialTime(initTime); manager.setFinalTime(finalTime);
-        manager.integrate(si);
+        //RungeKuttaMersonIntegrator integrator (osimModel.updMultibodySystem());
+        si.setTime(initTime);
+        Manager manager(osimModel, si);
+        manager.setIntegratorMethod(Manager::IntegratorMethod::RungeKuttaMerson);
+        //manager.setInitialTime(initTime); manager.setFinalTime(finalTime);
+        manager.integrate(finalTime);
         // Save results
         forces->getForceStorage().print("allForces.csv");
         //printBushingForce.printForces();

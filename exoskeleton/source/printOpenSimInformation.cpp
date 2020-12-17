@@ -124,7 +124,8 @@ namespace OpenSim {
     void PrintJointInformation::printJointParentLocation(int index)
     {
         SimTK::Vec3 locationInParent;
-        joints.get(index).getLocationInParent(locationInParent);
+        const OpenSim::PhysicalOffsetFrame& ParentFrame = dynamic_cast<const PhysicalOffsetFrame&>(joints.get(index).getParentFrame());
+        locationInParent = ParentFrame.get_translation();
         stream << index << "- " << arrayOfJointNames[index] << "'s location in parent: ";
         printVec3(locationInParent);
     }
@@ -132,7 +133,8 @@ namespace OpenSim {
     void PrintJointInformation::printJointChildLocation(int index)
     {
         SimTK::Vec3 locationInChild;
-        locationInChild = joints.get(index).getLocationInChild();
+        const OpenSim::PhysicalOffsetFrame& ChildFrame = dynamic_cast<const PhysicalOffsetFrame&>(joints.get(index).getChildFrame());
+        locationInChild = ChildFrame.get_translation();
         stream << index << "- " << arrayOfJointNames[index] << "'s location in child: ";
         printVec3(locationInChild);
     }
@@ -140,7 +142,8 @@ namespace OpenSim {
     void PrintJointInformation::printJointParentOrientation(int index)
     {
         SimTK::Vec3 orientationInParent;
-        joints.get(index).getOrientationInParent(orientationInParent);
+        const OpenSim::PhysicalOffsetFrame& ParentFrame = dynamic_cast<const PhysicalOffsetFrame&>(joints.get(index).getParentFrame());
+        orientationInParent = ParentFrame.get_orientation();
         stream << index << "- " << arrayOfJointNames[index] << "'s orientation in parent: ";
         printVec3(orientationInParent);
     }
@@ -148,9 +151,11 @@ namespace OpenSim {
     void PrintJointInformation::printAllJointParentLocations()
     {
         SimTK::Vec3 locationInParent;
+        OpenSim::PhysicalOffsetFrame ParentFrame;
         for (int index = 0; index < joints.getSize(); index++)
         {
-            joints.get(index).getLocationInParent(locationInParent);
+            ParentFrame = dynamic_cast<const PhysicalOffsetFrame&>(joints.get(index).getParentFrame());
+            locationInParent = ParentFrame.get_translation();
             stream << index << "- " << arrayOfJointNames[index] <<"'s location in parent: ";
             printVec3(locationInParent);
         }
@@ -159,9 +164,11 @@ namespace OpenSim {
     void PrintJointInformation::printAllJointParentOrientation()
     {
         SimTK::Vec3 orientationInParent;
+        OpenSim::PhysicalOffsetFrame ParentFrame;
         for (int index = 0; index < joints.getSize(); index++)
         {
-            joints.get(index).getOrientationInParent(orientationInParent);
+            ParentFrame = dynamic_cast<const PhysicalOffsetFrame&>(joints.get(index).getParentFrame());
+            orientationInParent = ParentFrame.get_orientation();
             stream << index << "- " << arrayOfJointNames[index] <<"'s location in parent: ";
             printVec3(orientationInParent);
         }
