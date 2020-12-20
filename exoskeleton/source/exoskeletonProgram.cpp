@@ -21,7 +21,6 @@ int main()
     {
         double initTime = 0.0, finalTime = 30.0;
 		vector<string> filePath;
-		vector<string> filePath;
 		filePath.push_back("");
 		string dummy;
 		cin >> dummy;
